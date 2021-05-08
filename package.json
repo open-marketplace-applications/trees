@@ -1,0 +1,11 @@
+{
+  "name": "treebook",
+  "version": "0.0.1",
+  "description": "",
+  "main": "",
+  "scripts": {
+    "heroku-postbuild": "cd frontend && npm install && npm run build"
+  },
+  "author": "",
+  "license": "ISC"
+}
