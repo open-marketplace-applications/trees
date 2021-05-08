@@ -15,9 +15,6 @@
 	"devDependencies": {
 		"@material/theme": "^11.0.0",
 		"@material/typography": "^11.0.0",
-		"@smui/icon-button": "^4.2.0",
-		"@smui/image-list": "^4.2.0",
-		"@smui/top-app-bar": "^4.2.0",
 		"@sveltejs/adapter-static": "^1.0.0-next.9",
 		"@sveltejs/kit": "next",
 		"@typescript-eslint/eslint-plugin": "^4.19.0",
