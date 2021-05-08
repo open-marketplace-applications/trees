@@ -6,7 +6,7 @@
 
 	// https://github.com/saabi/svelte-image-encoder
 
-	import ImageUpload from '../lib/ImageUpload.svelte';
+	import CreateForm from '../lib/CreateForm.svelte';
 </script>
 
-<ImageUpload />
+<CreateForm />
