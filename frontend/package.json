@@ -34,6 +34,10 @@
 	"type": "module",
 	"dependencies": {
 		"@smui/button": "^4.2.0",
-		"leaflet": "^1.7.1"
+		"leaflet": "^1.7.1",
+		"svelte-debugger": "^1.0.5",
+		"svelte-spinner": "^2.0.2",
+		"sveltejs-forms": "^2.1.2",
+		"yup": "^0.32.9"
 	}
 }
