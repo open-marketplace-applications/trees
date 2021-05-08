@@ -6,7 +6,15 @@
 		if (browser) {
 			const leaflet = await import('leaflet');
 
-			const map = leaflet.map('map').setView([49.31, 7.33], 21);
+			let position = [49.291676, 7.373426];
+
+			let area = [
+				[49.291634, 7.373488],
+				[49.291760, 7.374464],
+				[49.291676, 7.374586],
+				[49.291382, 7.373609]
+			];
+			const map = leaflet.map('map').setView(position, 21);
 
 			leaflet
 				.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -15,8 +23,18 @@
 				})
 				.addTo(map);
 
+			var rect = L.polygon(area, { color: 'blue', weight: 1 })
+				.on('click', function (e) {
+					// There event is event object
+					// there e.type === 'click'
+					// there e.lanlng === L.LatLng on map
+					// there e.target.getLatLngs() - your rectangle coordinates
+					// but e.target !== rect
+					console.info(e);
+				})
+				.addTo(map);
 			// 49.31822574308543, 7.33893700717749
-			leaflet.marker([49.31, 7.33]).addTo(map).bindPopup('Baum #1').openPopup();
+			leaflet.marker([49.291582, 7.374009]).addTo(map).bindPopup('Baum #1').openPopup();
 		}
 	});
 </script>
