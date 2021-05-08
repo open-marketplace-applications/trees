@@ -3,6 +3,7 @@ use actix_web::{middleware, web, App, Error, HttpResponse, HttpServer};
 use async_std::prelude::*;
 use futures::{StreamExt, TryStreamExt};
 use std::env;
+use actix_files::Files;
 
 async fn save_file(mut payload: Multipart) -> Result<HttpResponse, Error> {
     // iterate over multipart stream
@@ -53,11 +54,15 @@ async fn main() -> std::io::Result<()> {
     let ip = "0.0.0.0";
 
     HttpServer::new(|| {
-        App::new().wrap(middleware::Logger::default()).service(
-            web::resource("/")
-                .route(web::get().to(index))
-                .route(web::post().to(save_file)),
-        )
+        App::new()
+            .wrap(
+                middleware::Logger::default())
+            .service(
+                    web::resource("/upload")
+                    .route(web::get().to(index))
+                    .route(web::post().to(save_file)))
+                .service(Files::new("/images", "tmp/").show_files_listing())
+            .service(Files::new("/", "./frontend/build/").index_file("index.html"))
     })
     .bind((ip, port))?
     .run()

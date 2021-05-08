@@ -15,12 +15,8 @@
 				})
 				.addTo(map);
 
-            // 49.31822574308543, 7.33893700717749
-			leaflet
-				.marker([49.31, 7.33])
-				.addTo(map)
-				.bindPopup('Baum #1')
-				.openPopup();
+			// 49.31822574308543, 7.33893700717749
+			leaflet.marker([49.31, 7.33]).addTo(map).bindPopup('Baum #1').openPopup();
 		}
 	});
 </script>

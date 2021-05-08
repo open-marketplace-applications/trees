@@ -3,7 +3,7 @@
 	import { createLoadObserver } from '../lib/util.js';
 	import { browser } from '$app/env';
 
-    console.log('loaded??');
+	console.log('loaded??');
 	const onload = createLoadObserver(() => {
 		console.log('loaded!!!');
 

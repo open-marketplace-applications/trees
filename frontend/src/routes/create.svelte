@@ -7,7 +7,6 @@
 	// https://github.com/saabi/svelte-image-encoder
 
 	import ImageUpload from '../lib/ImageUpload.svelte';
-	
 </script>
 
 <ImageUpload />

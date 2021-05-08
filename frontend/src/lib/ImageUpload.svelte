@@ -1,9 +1,9 @@
 <script context="module">
-	export const ssr = false; 
+	export const ssr = false;
 </script>
-<script>
 
-    // Drag and resize the left/top image with the mouse
+<script>
+	// Drag and resize the left/top image with the mouse
 	// and wheel. Shift-drag also zooms.
 	// Also supports touch drag & pinch to zoom.
 	// Now with support for mouse events if pointer events not available
