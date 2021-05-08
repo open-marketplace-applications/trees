@@ -43,7 +43,7 @@ fn index() -> HttpResponse {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    std::env::set_var("RUST_LOG", "actix_server=info,actix_web=info");
+    env::set_var("RUST_LOG", "actix_server=debug,actix_web=debug");
     async_std::fs::create_dir_all("./tmp").await?;
 
     let port = env::var("PORT")
