@@ -14,7 +14,7 @@
 {#each trees as tree}
 
 {#if tree}
-<li><a target="_blank" href="http://localhost:5000/trees/{tree.id}">
+<li><a href="trees/{tree.id}">
     {tree.name},  {tree.genus}
 </a></li>
 {/if}

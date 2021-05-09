@@ -21,7 +21,7 @@
 		<div class="menu">
 			<Button link="/">Map</Button>
 			<Button link="/trees">Trees</Button>
-			<Button link="/create">Add Tree</Button>
+			<Button link="/trees/new">Add new Tree</Button>
 		</div>
     <div class="right">
       {#if $user.name === ''}

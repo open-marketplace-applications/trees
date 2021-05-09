@@ -116,6 +116,31 @@ async fn trees_index(
 }
 
 
+/// Finds user by UID.
+#[get("/trees/{tree_id}")]
+async fn get_tree(
+    pool: web::Data<DbPool>,
+    tree_uid: web::Path<Uuid>,
+) -> Result<HttpResponse, Error> {
+    let tree_uid = tree_uid.into_inner();
+    let conn = pool.get().expect("couldn't get db connection from pool");
+
+    // use web::block to offload blocking Diesel code without blocking server thread
+    let tree = web::block(move || actions::find_tree_by_uid(tree_uid, &conn))
+        .await
+        .map_err(|e| {
+            eprintln!("{}", e);
+            HttpResponse::InternalServerError().finish()
+        })?;
+
+    if let Some(tree) = tree {
+        Ok(HttpResponse::Ok().json(tree))
+    } else {
+        let res = HttpResponse::NotFound()
+            .body(format!("No tree found with uid: {}", tree_uid));
+        Ok(res)
+    }
+}
 
 async fn save_file(mut payload: Multipart) -> Result<HttpResponse, Error> {
     // iterate over multipart stream
@@ -197,6 +222,7 @@ async fn main() -> std::io::Result<()> {
                 .service(get_user)
                 .service(add_user)
                 .service(add_tree)
+                .service(get_tree)
                 .service(trees_index)
                 .service(Files::new("/", "./frontend/build/").index_file("index.html"))
     })
