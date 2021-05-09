@@ -1,2 +1,2 @@
 web: ./target/release/server
-release: ./target/release/server migration run
+release: ./target/release/diesel migration run
