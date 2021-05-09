@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 
-// USERS
+// USERS https://github.com/SakaDream/actix-web-rest-api-with-jwt
 use crate::schema::users;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Queryable, Insertable)]
