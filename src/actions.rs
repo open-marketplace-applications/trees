@@ -2,6 +2,7 @@ use diesel::prelude::*;
 use uuid::Uuid;
 
 use crate::models;
+use crate::database::PooledConnection;
 
 
 // -------
@@ -14,7 +15,7 @@ use crate::models;
 /// Run query using Diesel to find user by uid and return it.
 pub fn find_user_by_uid(
     uid: Uuid,
-    conn: &SqliteConnection,
+    conn: &PooledConnection,
 ) -> Result<Option<models::User>, diesel::result::Error> {
     use crate::schema::users::dsl::*;
 
@@ -30,7 +31,7 @@ pub fn find_user_by_uid(
 pub fn insert_new_user(
     // prevent collision with `name` column imported inside the function
     nm: &str,
-    conn: &SqliteConnection,
+    conn: &PooledConnection,
 ) -> Result<models::User, diesel::result::Error> {
     // It is common when using Diesel with Actix web to import schema-related
     // modules inside a function's scope (rather than the normal module's scope)
@@ -58,7 +59,7 @@ pub fn insert_new_user(
 /// Run query using Diesel to find tree by uid and return it.
 pub fn find_tree_by_uid(
     uid: Uuid,
-    conn: &SqliteConnection,
+    conn: &PooledConnection,
 ) -> Result<Option<models::Tree>, diesel::result::Error> {
     use crate::schema::trees::dsl::*;
 
@@ -75,7 +76,7 @@ pub fn insert_new_tree(
     // prevent collision with `name` column imported inside the function
     nm: &str,
     gn: &str,
-    conn: &SqliteConnection,
+    conn: &PooledConnection,
 ) -> Result<models::Tree, diesel::result::Error> {
     // It is common when using Diesel with Actix web to import schema-related
     // modules inside a function's scope (rather than the normal module's scope)
@@ -96,7 +97,7 @@ pub fn insert_new_tree(
 /// Returns all trees.
 pub fn get_all_trees(
     // prevent collision with `name` column imported inside the function
-    conn: &SqliteConnection,
+    conn: &PooledConnection,
 ) -> Result<Vec<models::Tree>, diesel::result::Error> {
     // It is common when using Diesel with Actix web to import schema-related
     // modules inside a function's scope (rather than the normal module's scope)

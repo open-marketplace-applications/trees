@@ -4,6 +4,9 @@ extern crate diesel;
 #[macro_use]
 extern crate log;
 
+#[macro_use]
+extern crate serde_derive;
+
 use actix_multipart::Multipart;
 use actix_web::{http, get, middleware, post, web, App, Error, HttpResponse, HttpServer};
 use actix_web::middleware::{errhandlers::ErrorHandlers, Logger};
@@ -22,13 +25,17 @@ use uuid::Uuid;
 mod actions;
 mod models;
 mod schema;
+mod database;
+mod cli_args;
+mod errors;
 
-type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
+
+// type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 
 /// Finds user by UID.
 #[get("/user/{user_id}")]
 async fn get_user(
-    pool: web::Data<DbPool>,
+    pool: web::Data<database::Pool>,
     user_uid: web::Path<Uuid>,
 ) -> Result<HttpResponse, Error> {
     let user_uid = user_uid.into_inner();
@@ -54,7 +61,7 @@ async fn get_user(
 /// Inserts new user with name defined in form.
 #[post("/user")]
 async fn add_user(
-    pool: web::Data<DbPool>,
+    pool: web::Data<database::Pool>,
     form: web::Json<models::NewUser>,
 ) -> Result<HttpResponse, Error> {
     let conn = pool.get().expect("couldn't get db connection from pool");
@@ -76,7 +83,7 @@ async fn add_user(
 /// Inserts new user with name defined in form.
 #[post("/trees")]
 async fn add_tree(
-    pool: web::Data<DbPool>,
+    pool: web::Data<database::Pool>,
     form: web::Json<models::NewTree>,
 ) -> Result<HttpResponse, Error> {
 
@@ -96,7 +103,7 @@ async fn add_tree(
 /// Returns a list of all trees in a array.
 #[get("/trees")]
 async fn trees_index(
-    pool: web::Data<DbPool>,
+    pool: web::Data<database::Pool>,
 ) -> Result<HttpResponse, Error> {
 
     println!("Hellow worl!");
@@ -119,7 +126,7 @@ async fn trees_index(
 /// Finds user by UID.
 #[get("/trees/{tree_id}")]
 async fn get_tree(
-    pool: web::Data<DbPool>,
+    pool: web::Data<database::Pool>,
     tree_uid: web::Path<Uuid>,
 ) -> Result<HttpResponse, Error> {
     let tree_uid = tree_uid.into_inner();
@@ -188,17 +195,25 @@ async fn main() -> std::io::Result<()> {
     async_std::fs::create_dir_all("./tmp").await?;
 
     // set up database connection pool
-    let connspec = std::env::var("DATABASE_URL").expect("DATABASE_URL");
-    let manager = ConnectionManager::<SqliteConnection>::new(connspec);
-    let pool = r2d2::Pool::builder()
-        .build(manager)
-        .expect("Failed to create pool.");
+    // let connspec = std::env::var("DATABASE_URL").expect("DATABASE_URL");
+    // let manager = ConnectionManager::<SqliteConnection>::new(connspec);
+    // let pool = r2d2::Pool::builder()
+    //     .build(manager)
+    //     .expect("Failed to create pool.");
+
+    let opt = {
+        use structopt::StructOpt;
+        cli_args::Opt::from_args()
+    };
+    let pool = web::Data::new(database::pool::establish_connection(opt.clone()));
+
 
     let port = env::var("PORT")
         .unwrap_or_else(|_| "5000".to_string())
         .parse().unwrap();
 
     let ip = "0.0.0.0";
+
 
     HttpServer::new(move || {
         let cors = Cors::default()
@@ -209,7 +224,7 @@ async fn main() -> std::io::Result<()> {
               .max_age(3600);
 
         App::new()
-            .data(pool.clone())
+            .app_data(pool.clone())
             .wrap(cors)
             .wrap(Logger::default())
             .wrap(
