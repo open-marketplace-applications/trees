@@ -1,46 +1,67 @@
 <script>
-	import Button, { Label, Icon } from '@smui/button';
 	let clicked = 0;
 	import { Form, Input, Select, Choice } from 'sveltejs-forms';
 	import Spinner from 'svelte-spinner';
 
-    import * as yup from 'yup';
+	import * as yup from 'yup';
 
 	import { onMount } from 'svelte';
 
 	let formValues;
 
-	function handleSubmit({ detail: { values, setSubmitting, resetForm } }) {
-		setTimeout(() => {
-			formValues = values;
-			setSubmitting(false);
-			resetForm();
-		}, 1000);
+	async function handleSubmit({ detail: { values, setSubmitting, resetForm } }) {
+		try {
+
+			console.log("values", values)
+			const options = {
+				method: 'post',
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json'
+				},
+				//make sure to serialize your JSON body
+				body: JSON.stringify(values.tree)
+			};
+			const returnValue = await fetch(`http://localhost:5000/trees`, options);
+			const response = await returnValue.json();
+			// gifs = response.data;
+			console.log('response', response);
+			setSubmitting(true);
+		} catch (error) {
+			console.log('error', error);
+		}
+
+		formValues = values;
 	}
 
-    console.log("yp", yup)
+	console.log('yp', yup);
 
-    // https://wiki.openstreetmap.org/wiki/Tag:natural%3Dtree
+	// https://wiki.openstreetmap.org/wiki/Tag:natural%3Dtree
 
-    // An oak tree (unknown species):
-    // leaf_type=broadleaved
-    // genus=Quercus (this is the latin genus name)
-    // genus:en=Oak
+	// An oak tree (unknown species):
+	// leaf_type=broadleaved
+	// genus=Quercus (this is the latin genus name)
+	// genus:en=Oak
 
 	const schema = yup.object().shape({
 		tree: yup.object().shape({
-			name: yup.string().min(1),
-			description: yup.string().min(1),
-			genus: yup.array().of(yup.string().required()).min(2),
+			name: yup.string(),
+			description: yup.string(),
+			genus: yup.string().required()
 		})
 	});
 
+	// const genus = [
+	// 	{ id: '1', title: 'Eiche (Oak)' },
+	// 	{ id: '2', title: 'Fichte (Spruce)' },
+	// 	{ id: '3', title: 'Birch (Birke)' },
+	// 	{ id: '4', title: 'Buche (Beech)' }
+	// ];
 	const genus = [
-		{ id: '1', title: 'Eiche (Oak)' },
-		{ id: '2', title: 'Fichte (Spruce)' },
-		{ id: '3', title: 'Birch (Birke)' },
-		{ id: '4', title: 'Buche (Beech)' }
-
+		{ title: 'Eiche (Oak)' },
+		{ title: 'Fichte (Spruce)' },
+		{ title: 'Birch (Birke)' },
+		{ title: 'Buche (Beech)' }
 	];
 </script>
 
@@ -51,12 +72,17 @@
 	on:submit={handleSubmit}
 	let:isSubmitting
 >
-	<Input name="user.name" label="Name (Optional)" placeholder="e.g. Baum Nr 42" />
+	<Input name="tree.name" label="Name (Optional)" placeholder="e.g. Baum Nr 42" />
 
-	<Input name="user.description" label="Description  (Optional)" placeholder="noticeable features" multiline />
+	<Input
+		name="tree.description"
+		label="Description  (Optional)"
+		placeholder="noticeable features"
+		multiline
+	/>
 
 	<label>Genus</label>
-	<Choice name="user.genus" options={genus} />
+	<Choice name="tree.genus" options={genus} />
 
 	<div class="buttons">
 		<button type="submit" disabled={isSubmitting}>Submit</button>
@@ -65,6 +91,8 @@
 		{/if}
 	</div>
 </Form>
+
+<pre>{formValues}</pre>
 
 <style>
 	:global(.sveltejs-forms) {
@@ -126,5 +154,4 @@
 		background-color: #48bb78;
 		width: 80px;
 	}
-
 </style>

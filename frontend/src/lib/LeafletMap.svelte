@@ -23,7 +23,7 @@
 				})
 				.addTo(map);
 
-			var rect = L.polygon(area, { color: 'blue', weight: 1 })
+			var rect = leaflet.polygon(area, { color: 'blue', weight: 1 })
 				.on('click', function (e) {
 					// There event is event object
 					// there e.type === 'click'
