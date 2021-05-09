@@ -1,8 +1,16 @@
 <script>
 	import { user } from './stores.js'
-
+  import { goto } from '$app/navigation';
+  import { fly } from 'svelte/transition';
 	import { ToggleMode, Container, Button, Logo } from '../design-system/index';
 	import UserMenu from './UserMenu.svelte'
+
+  const signOut = () => {
+    goto('/signin')
+    user.set({ name: '', avatarUrl: '' })
+    console.log(user)
+  }
+
 </script>
 
 <div class="nav">
@@ -11,16 +19,17 @@
       <Logo />
     </div>
 		<div class="menu">
-			<Button link="/">Home</Button>
+			<Button link="/">Map</Button>
+			<Button link="/trees">Trees</Button>
 			<Button link="/create">Add Tree</Button>
 		</div>
     <div class="right">
-      <ToggleMode />
       {#if $user.name === ''}
-        <Button class="cta-btn" link="/signin">Sign in</Button>
+        <Button color='secondary' link="/signin">Sign in</Button>
       {:else}
-        <Button link="/">Sign out</Button>
+        <Button type="button" onClick={signOut}>Sign out</Button>
       {/if}
+      <ToggleMode />
     </div>
   </Container>
 	

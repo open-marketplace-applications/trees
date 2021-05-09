@@ -14,6 +14,7 @@
 <style>
   button {
 		background-color: var(--color-element);
+		margin-left: 20px;
 		outline: none;
 		border-radius: var(--radius);
 		border: var(--border);

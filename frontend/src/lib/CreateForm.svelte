@@ -58,10 +58,10 @@
 	// 	{ id: '4', title: 'Buche (Beech)' }
 	// ];
 	const genus = [
-		{ title: 'Eiche (Oak)' },
-		{ title: 'Fichte (Spruce)' },
-		{ title: 'Birch (Birke)' },
-		{ title: 'Buche (Beech)' }
+		{ id: 'Eiche (Oak)', title: 'Eiche (Oak)' },
+		{ id: 'Fichte (Spruce)', title: 'Fichte (Spruce)'},
+		{ id: 'Birch (Birke)', title: 'Birch (Birke)'},
+		{ id: 'Buche (Beech)', title: 'Buche (Beech)'}
 	];
 </script>
 

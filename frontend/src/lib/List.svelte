@@ -11,12 +11,11 @@
 	});
 </script>
 
-<h1>Tree List</h1>
 {#each trees as tree}
 
 {#if tree}
 <li><a target="_blank" href="http://localhost:5000/trees/{tree.id}">
-    {tree.name}
+    {tree.name},  {tree.genus}
 </a></li>
 {/if}
 {/each}

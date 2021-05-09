@@ -3,7 +3,7 @@
   type buttonSize = 'sm' | 'md' | 'lg'
   type buttonColor = 'primary' | 'secondary'
 
-  export let callback: () => void
+  export let onClick: () => void
   export let label: string
   export let color: buttonColor = 'primary'
   export let link: string
@@ -25,7 +25,7 @@
   </a>
 {:else}
   <button
-    on:click={callback}
+    on:click={onClick}
     {type}
     class={`btn ${rounded ? 'rounded' : ''} ${size} ${color} ${
       block ? 'block' : ''
@@ -75,7 +75,7 @@
     padding: var(--space-xs) var(--space-lg);
   }
   .btn.md {
-    padding: var(--space-sm) var(--space-xl);
+    padding: var(--space-sm) var(--space-md);
   }
   .btn.lg {
     padding: var(--space-md) var(--space-xxl);
