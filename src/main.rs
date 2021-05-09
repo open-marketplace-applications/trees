@@ -1,4 +1,3 @@
-
 #[macro_use]
 extern crate diesel;
 #[macro_use]
@@ -8,13 +7,13 @@ extern crate log;
 extern crate serde_derive;
 
 use actix_multipart::Multipart;
-use actix_web::{http, get, middleware, post, web, App, Error, HttpResponse, HttpServer};
 use actix_web::middleware::{errhandlers::ErrorHandlers, Logger};
+use actix_web::{get, http, middleware, post, web, App, Error, HttpResponse, HttpServer};
 
+use actix_files::Files;
 use async_std::prelude::*;
 use futures::{StreamExt, TryStreamExt};
 use std::env;
-use actix_files::Files;
 
 use actix_cors::Cors;
 
@@ -23,12 +22,11 @@ use diesel::r2d2::{self, ConnectionManager};
 use uuid::Uuid;
 
 mod actions;
+mod cli_args;
+mod database;
+mod errors;
 mod models;
 mod schema;
-mod database;
-mod cli_args;
-mod errors;
-
 
 // type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 
@@ -52,8 +50,7 @@ async fn get_user(
     if let Some(user) = user {
         Ok(HttpResponse::Ok().json(user))
     } else {
-        let res = HttpResponse::NotFound()
-            .body(format!("No user found with uid: {}", user_uid));
+        let res = HttpResponse::NotFound().body(format!("No user found with uid: {}", user_uid));
         Ok(res)
     }
 }
@@ -77,8 +74,6 @@ async fn add_user(
     Ok(HttpResponse::Ok().json(user))
 }
 
-
-
 // trees
 /// Inserts new user with name defined in form.
 #[post("/trees")]
@@ -86,7 +81,6 @@ async fn add_tree(
     pool: web::Data<database::Pool>,
     form: web::Json<models::NewTree>,
 ) -> Result<HttpResponse, Error> {
-
     println!("Hellow worl!");
     let conn = pool.get().expect("couldn't get db connection from pool");
 
@@ -102,10 +96,7 @@ async fn add_tree(
 }
 /// Returns a list of all trees in a array.
 #[get("/trees")]
-async fn trees_index(
-    pool: web::Data<database::Pool>,
-) -> Result<HttpResponse, Error> {
-
+async fn trees_index(pool: web::Data<database::Pool>) -> Result<HttpResponse, Error> {
     println!("Hellow worl!");
     let conn = pool.get().expect("couldn't get db connection from pool");
 
@@ -121,7 +112,6 @@ async fn trees_index(
 
     Ok(HttpResponse::Ok().json(trees))
 }
-
 
 /// Finds user by UID.
 #[get("/trees/{tree_id}")]
@@ -143,8 +133,7 @@ async fn get_tree(
     if let Some(tree) = tree {
         Ok(HttpResponse::Ok().json(tree))
     } else {
-        let res = HttpResponse::NotFound()
-            .body(format!("No tree found with uid: {}", tree_uid));
+        let res = HttpResponse::NotFound().body(format!("No tree found with uid: {}", tree_uid));
         Ok(res)
     }
 }
@@ -207,39 +196,38 @@ async fn main() -> std::io::Result<()> {
     };
     let pool = web::Data::new(database::pool::establish_connection(opt.clone()));
 
-
     let port = env::var("PORT")
         .unwrap_or_else(|_| "5000".to_string())
-        .parse().unwrap();
+        .parse()
+        .unwrap();
 
     let ip = "0.0.0.0";
 
-
     HttpServer::new(move || {
         let cors = Cors::default()
-              .allowed_origin("http://localhost:3000")
-              .allowed_methods(vec!["GET", "POST"])
+            .allowed_origin("http://localhost:3000")
+            .allowed_methods(vec!["GET", "POST"])
             //   .allowed_headers(vec![http::header::AUTHORIZATION, http::header::ACCEPT])
-              .allowed_header(http::header::CONTENT_TYPE)
-              .max_age(3600);
+            .allowed_header(http::header::CONTENT_TYPE)
+            .max_age(3600);
 
         App::new()
             .app_data(pool.clone())
             .wrap(cors)
             .wrap(Logger::default())
-            .wrap(
-                middleware::Logger::default())
+            .wrap(middleware::Logger::default())
             .service(
-                    web::resource("/upload")
+                web::resource("/upload")
                     .route(web::get().to(index))
-                    .route(web::post().to(save_file)))
-                .service(Files::new("/images", "tmp/").show_files_listing())
-                .service(get_user)
-                .service(add_user)
-                .service(add_tree)
-                .service(get_tree)
-                .service(trees_index)
-                .service(Files::new("/", "./frontend/build/").index_file("index.html"))
+                    .route(web::post().to(save_file)),
+            )
+            .service(get_user)
+            .service(add_user)
+            .service(add_tree)
+            .service(get_tree)
+            .service(trees_index)
+            .service(Files::new("/images", "tmp/").show_files_listing())
+            .service(Files::new("/", "./frontend/build/").index_file("index.html"))
     })
     .bind((ip, port))?
     .run()
