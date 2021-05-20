@@ -14,7 +14,7 @@
 {#each trees as tree}
 
 {#if tree}
-<li><a href="trees/{tree.id}">
+<li><a href="/trees/new{tree.id}">
     {tree.name},  {tree.genus}
 </a></li>
 {/if}

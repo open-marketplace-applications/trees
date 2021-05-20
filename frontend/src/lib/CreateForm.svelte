@@ -2,17 +2,32 @@
 	let clicked = 0;
 	import { Form, Input, Select, Choice } from 'sveltejs-forms';
 	import Spinner from 'svelte-spinner';
+	import ChooseLocation from './ChooseLocation.svelte';
 
 	import * as yup from 'yup';
 
 	import { onMount } from 'svelte';
 
 	let formValues;
+	let position = {
+		lat: 49.291676, 
+		lng: 7.373426
+	}
+
+
+	function compareToB(x) {
+		console.log("compareToB");
+		console.log(x);
+	}
+
+	$: compareToB(position)
 
 	async function handleSubmit({ detail: { values, setSubmitting, resetForm } }) {
 		try {
 
 			console.log("values", values)
+			values.tree.lat = position.lat.toString();
+			values.tree.lng = position.lng.toString();
 			const options = {
 				method: 'post',
 				headers: {
@@ -36,6 +51,7 @@
 
 	console.log('yp', yup);
 
+
 	// https://wiki.openstreetmap.org/wiki/Tag:natural%3Dtree
 
 	// An oak tree (unknown species):
@@ -47,7 +63,9 @@
 		tree: yup.object().shape({
 			name: yup.string(),
 			description: yup.string(),
-			genus: yup.string().required()
+			genus: yup.string().required(),
+			lng: yup.number().required(),
+			lat: yup.number().required(),
 		})
 	});
 
@@ -84,6 +102,20 @@
 	<label>Genus</label>
 	<Choice name="tree.genus" options={genus} />
 
+	<Input
+		name="tree.lat"
+		label="lat"
+		bind:value={position.lat}
+	/>
+	<Input
+		name="tree.lng"
+		label="lng"
+		bind:value={position.lng}
+	/>
+
+	<ChooseLocation bind:position={position} />
+
+	
 	<div class="buttons">
 		<button type="submit" disabled={isSubmitting}>Submit</button>
 		{#if isSubmitting}

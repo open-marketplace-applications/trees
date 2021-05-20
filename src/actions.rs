@@ -76,6 +76,8 @@ pub fn insert_new_tree(
     // prevent collision with `name` column imported inside the function
     nm: &str,
     gn: &str,
+    lg: &str,
+    lt: &str,
     conn: &PooledConnection,
 ) -> Result<models::Tree, diesel::result::Error> {
     // It is common when using Diesel with Actix web to import schema-related
@@ -87,6 +89,8 @@ pub fn insert_new_tree(
         id: Uuid::new_v4().to_string(),
         name: nm.to_owned(),
         genus: gn.to_owned(),
+        lng: lg.to_owned(),
+        lat: lt.to_owned(),
     };
 
     diesel::insert_into(trees).values(&new_tree).execute(conn)?;

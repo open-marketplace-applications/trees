@@ -16,8 +16,8 @@ actix-files = "0.3"
 actix-cors = "0.5.4"
 env_logger = "0.8"
 
-diesel = { version = "1.4", features = ["postgres", "uuidv07", "chrono", "r2d2"] }
-#diesel = { version = "^1.1.0", features = ["sqlite", "r2d2"] }
+diesel = { version = "1.4", features = ["postgres", "uuidv07", "chrono", "r2d2", "numeric"] }
+#diesel = { version = "^1.1.0", features = ["sqlite", "r2d2", "numeric"] }
 dotenv = "0.15"
 failure = "0.1.8"
 r2d2 = "0.8"

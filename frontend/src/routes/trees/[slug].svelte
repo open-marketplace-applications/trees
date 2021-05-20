@@ -1,4 +1,6 @@
 <script context="module">
+
+	let current_tree
 	/**
 	 * @type {import('@sveltejs/kit').Load}
 	 */
@@ -9,9 +11,12 @@
         console.log("res", res)
 
 		if (res.ok) {
+
+			current_tree = await res.json()
+			console.log("current_tree", current_tree)
 			return {
 				props: {
-					tree: await res.json()
+					tree: current_tree
 				}
 			};
 		}
@@ -24,3 +29,8 @@
 </script>
 
 <h1>Tree Details</h1>
+{#if current_tree}
+<p>id: {current_tree.id}</p>
+<p>name: {current_tree.name}</p>
+<p>genus: {current_tree.genus}</p>
+{/if}

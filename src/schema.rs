@@ -1,15 +1,21 @@
 table! {
-    users (id) {
-        id -> Text,
-        name -> Text,
+    trees (id) {
+        id -> Varchar,
+        name -> Varchar,
+        genus -> Varchar,
+        lat -> Varchar,
+        lng -> Varchar,
     }
 }
-
 
 table! {
-    trees (id) {
-        id -> Text,
-        name -> Text,
-        genus -> Text,
+    users (id) {
+        id -> Varchar,
+        name -> Varchar,
     }
 }
+
+allow_tables_to_appear_in_same_query!(
+    trees,
+    users,
+);

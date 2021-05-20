@@ -85,7 +85,7 @@ async fn add_tree(
     let conn = pool.get().expect("couldn't get db connection from pool");
 
     // use web::block to offload blocking Diesel code without blocking server thread
-    let tree = web::block(move || actions::insert_new_tree(&form.name, &form.genus, &conn))
+    let tree = web::block(move || actions::insert_new_tree(&form.name, &form.genus, &form.lat, &form.lng, &conn))
         .await
         .map_err(|e| {
             eprintln!("{}", e);
