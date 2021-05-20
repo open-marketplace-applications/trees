@@ -227,7 +227,6 @@ async fn main() -> std::io::Result<()> {
             .service(get_tree)
             .service(trees_index)
             .service(Files::new("/images", "tmp/").show_files_listing())
-            .service(Files::new("/", "./frontend/build/").index_file("index.html"))
     })
     .bind((ip, port))?
     .run()
