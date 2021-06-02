@@ -68,10 +68,10 @@ impl Blobstorage {
 
     fn collect_configuration() -> Result<BlobStorageConfiguration> {
         let configuration = BlobStorageConfiguration {
-            endpoint: env::var("")?,
-            access_key: env::var("")?,
-            access_key_secret: env::var("")?,
-            region: env::var("")?
+            endpoint: env::var("BLOB_STORAGE_ENDPOINT")?,
+            access_key: env::var("BLOB_STORAGE_ACCESS_KEY")?,
+            access_key_secret: env::var("BLOB_STORAGE_ACCESS_KEY_SECRET")?,
+            region: env::var("BLOB_STORAGE_REGION")?
         };
 
         Ok(configuration)
