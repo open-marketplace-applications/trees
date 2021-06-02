@@ -27,6 +27,7 @@ mod database;
 mod errors;
 mod models;
 mod schema;
+mod blobstorage;
 
 // type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 
@@ -176,7 +177,7 @@ fn index() -> HttpResponse {
 }
 
 #[actix_web::main]
-async fn main() -> std::io::Result<()> {
+async fn main() -> anyhow::Result<()> {
     env::set_var("RUST_LOG", "actix_server=debug,actix_web=debug");
     env_logger::init();
 
@@ -196,6 +197,8 @@ async fn main() -> std::io::Result<()> {
     };
     let pool = web::Data::new(database::pool::establish_connection(opt.clone()));
 
+    let blobstorage = blobstorage::Blobstorage::new()?;
+
     let port = env::var("PORT")
         .unwrap_or_else(|_| "5000".to_string())
         .parse()
@@ -213,6 +216,7 @@ async fn main() -> std::io::Result<()> {
 
         App::new()
             .app_data(pool.clone())
+            .app_data(blobstorage.clone())
             .wrap(cors)
             .wrap(Logger::default())
             .wrap(middleware::Logger::default())
@@ -230,5 +234,7 @@ async fn main() -> std::io::Result<()> {
     })
     .bind((ip, port))?
     .run()
-    .await
+    .await?;
+
+    Ok(())
 }
