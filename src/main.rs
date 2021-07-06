@@ -197,7 +197,7 @@ async fn main() -> anyhow::Result<()> {
     };
     let pool = web::Data::new(database::pool::establish_connection(opt.clone()));
 
-    let blobstorage = blobstorage::Blobstorage::new()?;
+    // let blobstorage = blobstorage::Blobstorage::new()?;
 
     let port = env::var("PORT")
         .unwrap_or_else(|_| "5000".to_string())
@@ -216,7 +216,7 @@ async fn main() -> anyhow::Result<()> {
 
         App::new()
             .app_data(pool.clone())
-            .app_data(blobstorage.clone())
+            // .app_data(blobstorage.clone())
             .wrap(cors)
             .wrap(Logger::default())
             .wrap(middleware::Logger::default())
