@@ -7,7 +7,7 @@
 	let trees = [];
 	onMount(async () => {
 		if (browser) {
-			const returnValue = await fetch(variables.apiPath + `/trees`);
+			const returnValue = await fetch(variables.apiPath + '/trees');
 			console.log('returnValue', returnValue);
 			const response = await returnValue.json();
 			console.log('response', response);
