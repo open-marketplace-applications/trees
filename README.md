@@ -1,6 +1,6 @@
 # Treebook
 
-[Demo](https://trees.einfachiota.de/)
+[Demo](https://trees.iota4earth.org)
 [Backend](https://iotatreebook.herokuapp.com/)
 
 
