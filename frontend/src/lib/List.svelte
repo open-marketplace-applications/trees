@@ -1,9 +1,10 @@
 <script>
 	import { onMount } from 'svelte';
+	import { variables } from '$lib/variables';
 
     let trees = [];
 	onMount(async () => {
-		const returnValue = await fetch(`http://localhost:5000/trees`);
+		const returnValue = await fetch(variables.apiPath +`/trees`);
         console.log("returnValue", returnValue)
 		const response = await returnValue.json();
         console.log("response", response)

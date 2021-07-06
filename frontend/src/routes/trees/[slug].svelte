@@ -1,11 +1,12 @@
 <script context="module">
+	import { variables } from '$lib/variables';
 
 	let current_tree
 	/**
 	 * @type {import('@sveltejs/kit').Load}
 	 */
 	export async function load({ page, fetch, session, context }) {
-		const url = `http://localhost:5000/trees/${page.params.slug}`;
+		const url = variables.apiPath + `/trees/${page.params.slug}`;
         console.log("url", url)
 		const res = await fetch(url);
         console.log("res", res)

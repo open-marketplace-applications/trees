@@ -3,6 +3,7 @@
 	import { Form, Input, Select, Choice } from 'sveltejs-forms';
 	import Spinner from 'svelte-spinner';
 	import ChooseLocation from './ChooseLocation.svelte';
+	import { variables } from '$lib/variables';
 
 	import * as yup from 'yup';
 
@@ -37,7 +38,7 @@
 				//make sure to serialize your JSON body
 				body: JSON.stringify(values.tree)
 			};
-			const returnValue = await fetch(`http://localhost:5000/trees`, options);
+			const returnValue = await fetch(variables.apiPath + `/trees`, options);
 			const response = await returnValue.json();
 			// gifs = response.data;
 			console.log('response', response);
