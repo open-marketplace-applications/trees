@@ -28,4 +28,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
           publish_dir: ./frontend/build
-          cname: trees.einfachiota.de
+          cname: trees.iota4earth.org
